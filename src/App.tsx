@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import { Metronome } from "./Metronome";
+import BaseButton from "./components/button";
+import TempoItem from "./components/TempoItem";
 let met = null as null | Metronome;
 
 function App() {
@@ -9,14 +11,11 @@ function App() {
   const [tempoSteps, setTempoSteps] = useState(5);
   const [targetTempo, setTargetTempo] = useState(2 * startTempo);
 
-  const [procedure, setProcedure] = useState([] as number[]);
+  const [procedure, setProcedure] = useState([] as TempoStep[]);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    met?.stop();
-    console.log(JSON.stringify(met));
-    met = new Metronome(procedure[index]);
-    met.start();
+    startMetronomeOnCurrentTempo();
   }, [index]);
 
   document.addEventListener("keydown", (e) => {
@@ -24,82 +23,142 @@ function App() {
   });
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto min-h-screen">
       <div className="text-6xl font-bold">Get Faster!!!</div>
-      <div>
-        <label className="mr-2">Repetitions per tempo:</label>
-        <input
-          type="number"
-          value={repetitions}
-          onChange={(e) => setRepetitions(parseInt(e.target.value))}
-        />
+      {/* Settings */}
+      <div className="text-2xl font-semibold mt-4">Settings</div>
+      <table>
+        <tr>
+          <td className="pr-4">Starting tempo:</td>
+          <input
+            type="number"
+            value={startTempo}
+            onChange={(e) => setStartTempo(parseInt(e.target.value))}
+          />
+        </tr>
+        <tr>
+          <td className="pr-4">Target tempo:</td>
+          <input
+            type="number"
+            value={targetTempo}
+            onChange={(e) => setTargetTempo(parseInt(e.target.value))}
+          />
+        </tr>
+        <tr>
+          <td className="pr-4">Repetitions per step:</td>
+          <input
+            type="number"
+            value={repetitions}
+            onChange={(e) => setRepetitions(parseInt(e.target.value))}
+          />
+        </tr>
+        <tr>
+          <td className="pr-4">Tempo steps:</td>
+          <input
+            type="number"
+            value={tempoSteps}
+            onChange={(e) => setTempoSteps(parseInt(e.target.value))}
+          />
+        </tr>
+      </table>
+      <div className="mt-2 mb-4">
+        {BaseButton({
+          content: <div>Generate</div>,
+          variant: "primary",
+          onClick: () => {
+            setIndex(0);
+            setProcedure(
+              generateProcedure(
+                repetitions,
+                startTempo,
+                tempoSteps,
+                targetTempo
+              )
+            );
+          },
+        })}
       </div>
-      <div className="mt-2">
-        <label className="mr-2">Starting Tempo:</label>
-        <input
-          type="number"
-          value={startTempo}
-          onChange={(e) => setStartTempo(parseInt(e.target.value))}
-        />
-      </div>
-      <div className="mt-2">
-        <label className="mr-2">Tempo steps:</label>
-        <input
-          type="number"
-          value={tempoSteps}
-          onChange={(e) => setTempoSteps(parseInt(e.target.value))}
-        />
-      </div>
-      <div className="mt-2">
-        <label className="mr-2">Tempo steps:</label>
-        <input
-          type="number"
-          value={targetTempo}
-          onChange={(e) => setTargetTempo(parseInt(e.target.value))}
-        />
-      </div>
-      <button
-        className="bg-blue-500 py-3 px-6 rounded mt-2"
-        onClick={() => {
-          setIndex(0);
-          setProcedure(
-            generateProcedure(repetitions, startTempo, tempoSteps, targetTempo)
-          );
-        }}
-      >
-        Generate Sequence
-      </button>
-      <div className="flex flex-wrap gap-2">
-        {procedure.map((p, i) => (
-          <div
-            onClick={() => {
-              setIndex(i);
-            }}
-            key={i}
-            className={
-              (i == index ? "bg-green-500" : "bg-orange-500") + " p-2 rounded"
-            }
-          >
-            {p}
+
+      {procedure.length > 0 ? (
+        <>
+          {/* Tempo Grid */}
+          <div className="text-2xl font-semibold mt-4 mb-2">Steps</div>
+          <div className="flex flex-wrap md:gap-4 gap-2 select-none cursor-pointer">
+            {procedure.map((p, i) => (
+              <div key={i} onClick={() => setIndex(i)}>
+                <TempoItem tempo={p.tempo} type={p.type} active={i == index} />
+              </div>
+            ))}
           </div>
-        ))}
+          <div className="text-2xl font-bold">
+            Total: {procedure.length} steps
+          </div>
+          <div className="flex gap-2">
+            <BaseButton
+              onClick={() => startMetronomeOnCurrentTempo()}
+              content={<div>Start metronome</div>}
+              variant="secondary"
+            />
+            <BaseButton
+              onClick={() => met?.stop()}
+              content={<div>Stop metronome</div>}
+              variant="secondary"
+            />
+            <BaseButton
+              onClick={() => setIndex(index + 1)}
+              content={<div>Next step</div>}
+            />
+          </div>
+        </>
+      ) : (
+        ""
+      )}
+      {/* How to guide */}
+      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6">
+        <div>
+          <div className="text-2xl font-semibold mt-4">What is this?</div>
+          <div className="">
+            This is small tool that generates a sequences of tempos to help one
+            get faster at a (short) section of music. This works by slowly
+            increasing the tempo after every playing, with some jumps ever{" "}
+            <i>n</i> steps. I came across this practice method in the book "The
+            Working Clarinetist" by Peter Hadcock. I started this project for
+            myself as both a useful tool while practicing and also an
+            opportunity to take a look at the react framework. The code for this
+            site can be found{" "}
+            <a
+              className="text-blue-500 underline"
+              href="https://github.com/niklas-gund/training-metronome"
+              target="_blank"
+            >
+              here
+            </a>
+            .
+          </div>
+        </div>
+        <div>
+          <div className="text-2xl font-semibold mt-4">How do I use it?</div>
+          <div className="">
+            For starting tempo you should enter a tempo in which you can
+            comfortable play the section you want to practice. The target tempo
+            is the tempo you will end up with.
+          </div>
+        </div>
       </div>
-      <div className="text-2xl font-bold">Total: {procedure.length}</div>
-      <button
-        className="bg-purple-500 py-3 px-6 rounded mt-2"
-        onClick={() => setIndex(index + 1)}
-      >
-        Next Index
-      </button>
-      <button
-        className="bg-red-500 py-3 px-6 rounded mt-2"
-        onClick={() => met?.stop()}
-      >
-        Stop All
-      </button>
     </div>
   );
+
+  function startMetronomeOnCurrentTempo() {
+    met?.stop();
+    met = new Metronome(procedure[index]?.tempo ?? 1);
+    met.start();
+  }
 }
+
+export type TempoStep = {
+  type: "start" | "end" | "step" | "jump";
+  tempo: number;
+};
 
 function generateProcedure(
   reps: number,
@@ -107,11 +166,12 @@ function generateProcedure(
   step: number,
   goal: number
 ) {
-  const tempos = [] as number[];
+  start -= step;
+  const tempos = [] as TempoStep[];
   do {
-    tempos.push(...Array(reps).fill(start));
-    tempos.push(start + 3 * step);
     start += step;
+    tempos.push(...Array(reps).fill({ type: "step", tempo: start }));
+    tempos.push({ type: "jump", tempo: start + 3 * step });
   } while (start < goal);
   return tempos;
 }

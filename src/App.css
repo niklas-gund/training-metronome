@@ -1,3 +1,20 @@
 input {
-  @apply bg-blue-300;
+  @apply bg-ming-400 !p-2 !m-2 rounded-xl text-right !text-ming-900 !font-semibold;
+}
+
+body {
+  @apply bg-gradient-to-tl from-ming-200 to-ming-300 text-ming-800;
+}
+
+/* disabling arrows on inputs */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
 }
