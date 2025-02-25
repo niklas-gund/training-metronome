@@ -6,7 +6,7 @@ import TempoItem from "./components/TempoItem";
 let met = null as null | Metronome;
 
 function App() {
-  const [repetitions, setRepetitions] = useState(4);
+  const [repetitions, setRepetitions] = useState(1);
   const [startTempo, setStartTempo] = useState(96);
   const [tempoSteps, setTempoSteps] = useState(5);
   const [targetTempo, setTargetTempo] = useState(2 * startTempo);
