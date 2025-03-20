@@ -125,13 +125,14 @@ function App() {
             Working Clarinetist" by Peter Hadcock. I started this project for
             myself as both a useful tool while practicing and also an
             opportunity to take a look at the react framework. The code for this
-            site can be found{" "}
+            site can be found on here:{" "}
             <a
               className="text-blue-500 underline"
               href="https://github.com/niklas-gund/training-metronome"
               target="_blank"
+              referrerPolicy="no-referrer"
             >
-              here
+              GitHub Repository
             </a>
             .
           </div>
