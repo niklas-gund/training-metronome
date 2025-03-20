@@ -24,43 +24,43 @@ function App() {
 
   return (
     <div className="container mx-auto min-h-screen">
-      <div className="text-6xl font-bold">Get Faster!!!</div>
+      <h1 className="text-6xl font-bold">Get Faster!!!</h1>
       {/* Settings */}
       <div className="text-2xl font-semibold mt-4">Settings</div>
-      <table>
-        <tr>
-          <td className="pr-4">Starting tempo:</td>
+      <div>
+        <div className="flex gap-4 items-center">
+          <div className="w-48">Starting tempo:</div>
           <input
             type="number"
             value={startTempo}
             onChange={(e) => setStartTempo(parseInt(e.target.value))}
           />
-        </tr>
-        <tr>
-          <td className="pr-4">Target tempo:</td>
+        </div>
+        <div className="flex gap-4 items-center">
+          <div className="w-48">Target tempo:</div>
           <input
             type="number"
             value={targetTempo}
             onChange={(e) => setTargetTempo(parseInt(e.target.value))}
           />
-        </tr>
-        <tr>
-          <td className="pr-4">Repetitions per step:</td>
+        </div>
+        <div className="flex gap-4 items-center">
+          <div className="w-48">Repetitions per step:</div>
           <input
             type="number"
             value={repetitions}
             onChange={(e) => setRepetitions(parseInt(e.target.value))}
           />
-        </tr>
-        <tr>
-          <td className="pr-4">Tempo steps:</td>
+        </div>
+        <div className="flex gap-4 items-center">
+          <div className="w-48">Tempo steps:</div>
           <input
             type="number"
             value={tempoSteps}
             onChange={(e) => setTempoSteps(parseInt(e.target.value))}
           />
-        </tr>
-      </table>
+        </div>
+      </div>
       <div className="mt-2 mb-4">
         {BaseButton({
           content: <div>Generate</div>,
@@ -116,7 +116,7 @@ function App() {
       {/* How to guide */}
       <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6">
         <div>
-          <div className="text-2xl font-semibold mt-4">What is this?</div>
+          <h2 className="text-2xl font-semibold mt-4">What is this?</h2>
           <div className="">
             This is small tool that generates a sequences of tempos to help one
             get faster at a (short) section of music. This works by slowly
@@ -137,7 +137,7 @@ function App() {
           </div>
         </div>
         <div>
-          <div className="text-2xl font-semibold mt-4">How do I use it?</div>
+          <h2 className="text-2xl font-semibold mt-4">How do I use it?</h2>
           <div className="">
             For starting tempo you should enter a tempo in which you can
             comfortable play the section you want to practice. The target tempo
